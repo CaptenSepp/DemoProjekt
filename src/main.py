@@ -5,7 +5,7 @@ from RKIAnalyzer import RKIAnalyzer
 from gui import App
 
 def plotFunction(ax, bundesland):
-    data = analyzer.getWeeklyCumulatedDataForBundesland(rowname='AnzahlFall', bundesland=bundesland)
+    data = analyzer.getWeeklyCumulatedDataForBundesland(columnName='AnzahlFall', bundesland=bundesland)
     ax.plot(data.index, data, label=bundesland)
     ax.legend()
     ax.set_title('Fallzahlen')

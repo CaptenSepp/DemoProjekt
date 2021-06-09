@@ -19,9 +19,10 @@ class RKIAnalyzer:
 
         return set( result )
 
-    def getWeeklyCumulatedDataForBundesland(self, rowname, bundesland):
+    def getWeeklyCumulatedDataForBundesland(self, columnName, bundesland):
         df = self.data[self.data.Bundesland == bundesland]
-        df = df.resample('w').agg({rowname:lambda x: x.sum()})
-        df = df.cumsum()
-        return df[rowname]
+        col = df[columnName]
+        col = col.resample('w').agg({columnName:'sum'})
+        col = col.droplevel(0)
+        return col.cumsum()
 
