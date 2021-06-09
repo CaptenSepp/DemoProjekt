@@ -27,8 +27,8 @@ src\main.py             21     21     0%
 TOTAL                  111     91    18%
 ```
 
-Hier zu sehen, dass die Datei mit der Programmlogik "RKIAnalyzer.py" zu 100% durch die Tests abgedeckt ist.
-gui.py und main.py werden gar nicht getestet. Solange dort keine verarbeitung der RKI-Daten stattfindet, ist
+Hier zu sehen, dass die Datei mit der Programmlogik `RKIAnalyzer.py` zu 100% durch die Tests abgedeckt ist.
+`gui.py` und `main.py` werden gar nicht getestet. Solange dort keine Verarbeitung der RKI-Daten stattfindet, ist
 das völlig i.O.
 
 
