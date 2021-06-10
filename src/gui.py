@@ -51,6 +51,12 @@ class App(QMainWindow):
             guiReadyFunction(self)
 
     def showStatusText(self, msg, executeEventLoop=False):
+        """
+        Hiermit kann von der main.py aus der Text der Statusleiste festgelegt werden
+        :param msg: Test, der angezeigt werden soll.
+        :param executeEventLoop: Wenn True, dann wird die Eventloop abgearbeitet, damit es zur sofortigen Anzeige kommt.
+        :return: None
+        """
         self.statusBar().showMessage(msg)
 
         if executeEventLoop:
@@ -58,6 +64,10 @@ class App(QMainWindow):
             QApplication.processEvents()
 
     def parameterChanged(self, *args):
+        """
+        Aufrufe, wenn sich ein Parameter der GUI ändert.
+        :return: None
+        """
         bundesland = self.BundeslandSelect.currentText()
 
         ax = self.mplcanvas.ax
@@ -66,6 +76,11 @@ class App(QMainWindow):
         self.mplcanvas.draw()
 
     def setBundeslaender(self, listeBundeslaender):
+        """
+        Listeneinträge in der Combobox festlegen.
+        :param listeBundeslaender: Liste mit Strings der Bundesland-Namen
+        :return: None
+        """
         self.BundeslandSelect.clear()
         for bl in listeBundeslaender:
             self.BundeslandSelect.addItem(bl)
