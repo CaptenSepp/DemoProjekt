@@ -84,17 +84,16 @@ class RKIAnalyzer:
         col = col.droplevel(0)
         return col.cumsum()
 
-    def getWeeklyCumulatedDataForBundesland(self, columnName, geschlecht):
+    def getWeeklyCumulatedDataForAnzahfall(self, columnName):
         """
         Diese Funktion unterscheidet die Zahlen von Tote mit Infizierte Personen.
-
 
         :param columnName: Name der Spalte
         :param bundesland: Name des Bundeslands
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
 
         """
-        df = self.data[self.data.Geschlecht == geschlecht] # matrisi az hame zan ha ya ...
+        df = self.data # matrisi az hame zan ha ya ...
         col = df[columnName] # teedade mariza dar yek sotun
         col = col.resample('w').agg({columnName:'sum'}) # majmooee hame aadade sotun
         col = col.droplevel(0)
