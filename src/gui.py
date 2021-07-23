@@ -107,7 +107,6 @@ class App(QMainWindow):
         for i in bundeslands:
             self.BundeslandSelect.addItem(i)
 
-
         self.StartDateSelect.clear()
         for i in dates:
             self.StartDateSelect.addItem(i)

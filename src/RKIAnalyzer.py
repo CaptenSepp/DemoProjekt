@@ -78,6 +78,6 @@ class RKIAnalyzer:
         """
         df = self.data  # matrisi az hame zan ha ya ...
         col = df[columnName]  # teedade mariza dar yek sotun
-        col = col.resample('w').agg({columnName: 'sum'})  # majmooee hame aadade sotun
+        col = col.resample('M').agg({columnName: 'sum'})  # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()
