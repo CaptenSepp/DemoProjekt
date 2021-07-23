@@ -1,6 +1,7 @@
 import pandas as pd
 import datetime as dt
 
+
 class RKIAnalyzer:
     def __init__(self):
         data = pd.DataFrame()
@@ -31,70 +32,52 @@ class RKIAnalyzer:
 
     def getGeschlecht(self):
         """
-        Ermittelt aus dem Datensatz eine Liste der aufgeführten Bundesländer.
+        Ermittelt aus dem Datensatz eine Liste der aufgeführten Geschlecht, Bundesländer und Datum.
         :return: Liste der Bundesländer als Datentyp "set"
-
-        Determines a list of the federal states listed from the data set.
-         : return: List of federal states as data type "set"
         """
         result = self.data.Geschlecht.unique()
+        return set(result)
 
-        return set( result )
+    def getBundesland(self):
+        result = self.data.Bundesland.unique()
+        return set(result)
 
-    def getWeeklyCumulatedDataForBundesland(self, columnName, geschlecht):
+    def getDate(self):
+        result = []
+        dates = self.data.Meldedatum.unique()
+        for i in range(len(dates)):
+            j = str(dates[i])[0:7]
+            result.append(j)
+        result.sort() # todo chikar konim in lanati in order beshe???
+        return set(result)
+
+    def getWeeklySumOfEachSexuality(self, columnName, sexualityTarget):
         """
         Ermittelt aus dem Datensatz wöchentlich gruppiert und aufsummiert die Zahlen einer Spalte.
         Wenn <columnName> z. B. "AnzahlFall" ist, dann werden die aufsummierten (Kumulierten) Gesamtinfektionen pro Bundesland
         und pro Woche zurückgegeben.
 
-        Beispiel:
-            Woche 1: 10 Fälle
-            Woche 2: 5 Fälle
-            Woche 3: 15 Fälle
-            Kumuliert ist das dann
-            Woche 1: 10 Fälle
-            Woche 2: 15 Fälle
-            Woche 3: 30 Fälle
-
         :param columnName: Name der Spalte
         :param bundesland: Name des Bundeslands
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
 
-
-
-        Determines from the data set, grouped weekly and adds up the numbers in a column.
-        For example, if <columnName> is "NumberCases", then the total (cumulative) total infections per state and per week are returned.
-
-         Example:
-             Week 1: 10 cases
-             Week 2: 5 cases
-             Week 3: 15 cases
-             That is then cumulative
-             Week 1: 10 cases
-             Week 2: 15 cases
-             Week 3: 30 cases
-
-         : param columnName: name of the column
-         : param state: Name of the state
-         : return: pd.Series with the week start date as index and the cumulative values.
         """
-        df = self.data[self.data.Geschlecht == geschlecht] # matrisi az hame zan ha ya ...
-        col = df[columnName] # teedade mariza dar yek sotun
-        col = col.resample('w').agg({columnName:'sum'}) # majmooee hame aadade sotun
+        df = self.data[self.data.Geschlecht == sexualityTarget]  # matrisi az hame zan ha ya ...
+        col = df[columnName]  # teedade mariza dar yek sotun
+        col = col.resample('w').agg({columnName: 'sum'})  # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()
 
-    def getWeeklyCumulatedDataForAnzahfall(self, columnName):
+    def getWeeklySumOfAllData(self, columnName):
         """
         Diese Funktion unterscheidet die Zahlen von Tote mit Infizierte Personen.
 
         :param columnName: Name der Spalte
         :param bundesland: Name des Bundeslands
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
-
         """
-        df = self.data # matrisi az hame zan ha ya ...
-        col = df[columnName] # teedade mariza dar yek sotun
-        col = col.resample('w').agg({columnName:'sum'}) # majmooee hame aadade sotun
+        df = self.data  # matrisi az hame zan ha ya ...
+        col = df[columnName]  # teedade mariza dar yek sotun
+        col = col.resample('w').agg({columnName: 'sum'})  # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()

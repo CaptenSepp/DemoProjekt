@@ -13,21 +13,21 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 
-class MplCanvas(FigureCanvasQTAgg): #
-    def __init__(self, parent=None, width=5, height=4, dpi=100): # 100 hamechi ro taghir mide
+class MplCanvas(FigureCanvasQTAgg):  #
+    def __init__(self, parent=None, width=5, height=4, dpi=100):  # 100 hamechi ro taghir mide
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.ax = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
 
 
 class App(QMainWindow):
-    def __init__(self, plotFunction, guiReadyFunction = None):
+    def __init__(self, plotFunction, guiReadyFunction=None):
         super().__init__()
         self.plotFunction = plotFunction
 
         TopVLayout = QVBoxLayout()
 
-        self.mplcanvas = MplCanvas() # inja Classe Mplcanvas estefade shode
+        self.mplcanvas = MplCanvas()  # inja Classe Mplcanvas estefade shode
         TopVLayout.addWidget(self.mplcanvas)
 
         paramWidget = QHBoxLayout()
@@ -35,18 +35,17 @@ class App(QMainWindow):
         paramWidget.addWidget(self.AnalyseSelect)
         self.AnalyseSelect.setMinimumWidth(150)
 
-        self.BundeslandSelect = QComboBox()     # todo Bundesland addieren
+        self.BundeslandSelect = QComboBox()  # todo Bundesland addieren
         paramWidget.addWidget(self.BundeslandSelect)
         self.BundeslandSelect.setMinimumWidth(200)
 
-        self.AngangDatumSelect = QComboBox()
-        paramWidget.addWidget(self.AngangDatumSelect)
-        self.AngangDatumSelect.setMinimumWidth(100)
+        self.StartDateSelect = QComboBox()
+        paramWidget.addWidget(self.StartDateSelect)
+        self.StartDateSelect.setMinimumWidth(100)
 
-        self.EndeDatumSelect = QComboBox()
-        paramWidget.addWidget(self.EndeDatumSelect)
-        self.EndeDatumSelect.setMinimumWidth(100)
-
+        self.EndDateSelect = QComboBox()
+        paramWidget.addWidget(self.EndDateSelect)
+        self.EndDateSelect.setMinimumWidth(100)
 
         paramWidget.addStretch()
         TopVLayout.addLayout(paramWidget)
@@ -59,7 +58,6 @@ class App(QMainWindow):
         self.AnalyseSelect.currentTextChanged.connect(self.parameterChanged)
         self.show()
 
-
         if guiReadyFunction:
             guiReadyFunction(self)
 
@@ -69,11 +67,6 @@ class App(QMainWindow):
         :param msg: Test, der angezeigt werden soll.
         :param executeEventLoop: Wenn True, dann wird die Eventloop abgearbeitet, damit es zur sofortigen Anzeige kommt.
         :return: None
-
-        This can be used to define the text of the status-bar from main.py
-         : param msg: test to be displayed.
-         : param executeEventLoop: If True, the event loop is processed so that it is displayed immediately.
-         : return: None
         """
         self.statusBar().showMessage(msg)
 
@@ -85,49 +78,54 @@ class App(QMainWindow):
         """
         Aufrufe, wenn sich ein Parameter der GUI ändert.
         :return: None
-
-        Calls when a parameter of the GUI changes.
-         : return: None
         """
-        nutzerWahl = self.AnalyseSelect.currentText()
-        ax = self.mplcanvas.ax             # object az mplcanvas   fig.add_subplot(111)
-        ax.cla()                           # ax nemudaras ke ma mikhaym
-        if (nutzerWahl =='M-W-Unbekannt'):
-            self.plotFunction(ax, 'M', nutzerWahl)
-            self.plotFunction(ax, 'W', nutzerWahl)
-            self.plotFunction(ax, 'unbekannt', nutzerWahl)
-        elif(nutzerWahl =='Tod-Anzahlfall'):
-            self.plotFunction(ax, 'AnzahlFall', nutzerWahl)
-            # self.plotFunction(ax, 'M', nutzerWahl)
+        choice = self.AnalyseSelect.currentText()
+        ax = self.mplcanvas.ax
+        # object az mplcanvas   fig.add_subplot(111)
+        ax.cla()
+        # ax nemudaras ke ma mikhaym
+        if (choice == 'M-W-Unbekannt'):
+            self.plotFunction(ax, 'M')
+            self.plotFunction(ax, 'W')
+            self.plotFunction(ax, 'unbekannt')
+        elif (choice == 'Tod-Anzahlfall'):
+            self.plotFunction(ax, 'AnzahlFall')
+        # bundesland = self.BundeslandSelect.currentText()
         self.mplcanvas.draw()
 
-    def setAnalyse(self, Extra): # todo inja bayad
+    def setter(self, bundeslands, dates):  # todo
         """
         Listeneinträge in der Combobox festlegen.
-        :param listeBundeslaender: Liste mit Strings der Bundesland-Namen
+        :param Analyse: Liste mit Strings der Analyse
         :return: None
-
-        Define list entries in the combo-box.
-         : param listeBundeslaender: List with strings of the state names
-         : return: None
         """
         self.AnalyseSelect.clear()
         self.AnalyseSelect.addItem("M-W-Unbekannt")
         self.AnalyseSelect.addItem("Tod-Anzahlfall")
 
+        self.BundeslandSelect.clear()
+        for i in bundeslands:
+            self.BundeslandSelect.addItem(i)
 
-    def setBundesland(self, listeBundeslaender): # todo inja bayad
+
+        self.StartDateSelect.clear()
+        for i in dates:
+            self.StartDateSelect.addItem(i)
+
+        self.EndDateSelect.clear()
+        for i in dates:
+            self.EndDateSelect.addItem(i)
+            # self.EndDateSelect.addItem((str(i))[0:7])
+
+    def setBundesland(self, listeBundeslaender):  # todo inja bayad
         """
         Listeneinträge in der Combobox festlegen.
         :param listeBundeslaender: Liste mit Strings der Bundesland-Namen
         :return: None
         """
-        self.GeschlechtSelect.clear()
+        self.BundeslandSelect.clear()
         for bl in listeBundeslaender:
-            self.GeschlechtSelect.addItem(bl)
-        self.GeschlechtSelect.addItem("alle")
-
-
+            self.BundeslandSelect.addItem(bl)
 
 # if __name__ == '__main__': # todo in code payin kari nemikone, baraye chi neveshte shode, ma kamentesh kardim baz kar mikone
 #     import numpy as np

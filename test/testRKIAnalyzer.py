@@ -92,7 +92,7 @@ class testBerechnungen(unittest.TestCase):
         datastream = StringIO('\n'.join(data))
         mut = RKIAnalyzer()
         mut.loadDataFromFile(datastream, filetype='csv')
-        result = mut.getWeeklyCumulatedDataForBundesland(columnName='AnzahlFall', bundesland='xx')
+        result = mut.getWeeklySumOfEachSexuality(columnName='AnzahlFall', bundesland='xx')
         expected = pd.Series([sum(range(7)), sum(range(14))],
                              index=pd.date_range(start='2021/05/03 00:00:00', freq='w', periods=2))
         expected.index.name = 'Refdatum'

@@ -5,24 +5,19 @@ from RKIAnalyzer import RKIAnalyzer
 from gui import App
 
 
-def plotFunction(ax, geschlecht, nutzerWahl):
+def plotFunction(ax, choice):
     """
     Diese Funktion wird aufgerufen, wenn der Benutzer ein anderes Bundesland wählt oder direkt nach dem Start.
     :param ax: Matplotlib Ax-Objekt. Mit z. b. ax.plot kann gezeichnet werden.
     :param bundesland: Name des ausgewählten Bundeslands
     :return: None
-
-    This function is called when the user selects a different state or immediately after the program start.
-     : param ax: Matplotlib Ax object. With z. b. ax.plot can be drawn.
-     : param state: Name of the selected state
-     : return: None
     """
 
-    if (geschlecht == 'AnzahlFall'):
-        data = analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='AnzahlFall')  # maghadire nemudar migire az getWeek... az RKI Analiz
-        ax.plot(data.index, data, label=geschlecht)  # plot misaze azash
-        data_dead = analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='AnzahlTodesfall')
-        ax.plot(data_dead.index, data_dead, label='AnzahlTodesfall')
+    if (choice == 'AnzahlFall'):
+        dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall')  # maghadire nemudar migire az getWeek... az RKI Analiz
+        ax.plot(dataIll.index, dataIll, label=choice)  # plot misaze azash
+        dataDead = analyzer.getWeeklySumOfAllData(columnName='AnzahlTodesfall')
+        ax.plot(dataDead.index, dataDead, label='AnzahlTodesfall')
 
         # sharedDataBundesland=analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
         # sharedDataDatum=analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
@@ -31,8 +26,8 @@ def plotFunction(ax, geschlecht, nutzerWahl):
         ax.legend()
         ax.grid()
     else:
-        data = analyzer.getWeeklyCumulatedDataForBundesland(columnName='AnzahlFall', geschlecht=geschlecht)
-        ax.plot(data.index, data, label=geschlecht)
+        dataIll = analyzer.getWeeklySumOfEachSexuality(columnName='AnzahlFall', sexualityTarget=choice)
+        ax.plot(dataIll.index, dataIll, label=choice)
 
         # sharedDataBundesland = analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
         # sharedDataDatum = analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
@@ -40,21 +35,6 @@ def plotFunction(ax, geschlecht, nutzerWahl):
         ax.set_title('Männer/Frauen/Unbekannt')
         ax.legend()
         ax.grid()
-
-
-# def plotFunctionTodes(ax, geschlecht):
-#     """
-#     Diese Funktion wird aufgerufen, wenn der Benutzer ein anderes Bundesland wählt oder direkt nach dem Start.
-#     :param ax: Matplotlib Ax-Objekt. Mit z. b. ax.plot kann gezeichnet werden.
-#     :param bundesland: Name des ausgewählten Bundeslands
-#     :return: None
-#
-#     This function is called when the user selects a different state or immediately after the program start.
-#      : param ax: Matplotlib Ax object. With z. b. ax.plot can be drawn.
-#      : param state: Name of the selected state
-#      : return: None
-#     """
-#
 
 def guiReadyFunction(window):
     """
@@ -67,9 +47,8 @@ def guiReadyFunction(window):
     fn = '../daten/RKI_COVID19_short.csv'  # import etelaat az file
     analyzer.loadDataFromFile(fn, filetype='csv')
 
-    window.setAnalyse(analyzer.getGeschlecht())
+    window.setter(analyzer.getBundesland(), analyzer.getDate())
     window.showStatusText("Bereit")
-
 
 if __name__ == '__main__':
     analyzer = RKIAnalyzer()  # todo , IN NEMIDOONAM CHIKAR MIKONE
