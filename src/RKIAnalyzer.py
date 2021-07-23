@@ -1,5 +1,8 @@
 import pandas as pd
 import datetime as dt
+import time
+import datetime
+
 
 
 class RKIAnalyzer:
@@ -46,12 +49,20 @@ class RKIAnalyzer:
         result = []
         dates = self.data.Meldedatum.unique()
         for i in range(len(dates)):
-            j = str(dates[i])[0:7]
+            j = str(dates[i])[0:10].replace("T", " ")
             result.append(j)
-        result.sort() # todo chikar konim in lanati in order beshe???
-        return set(result)
+        result = set(result)
+        return sorted(result)
 
-    def getWeeklySumOfEachSexuality(self, columnName, sexualityTarget):
+    def compareTwoDates(self, targetDate, startDate, endDate):
+        targetDate = int(targetDate[0:10].replace("-",""))
+        startDate = int(startDate[0:10].replace("-",""))
+        endDate = int(endDate[0:10].replace("-",""))
+        if startDate < targetDate < endDate:
+            return True
+        return False
+
+    def getWeeklySumOfEachSexuality(self, columnName, sexualityTarget, bundesland, startDate, endDate):
         """
         Ermittelt aus dem Datensatz wöchentlich gruppiert und aufsummiert die Zahlen einer Spalte.
         Wenn <columnName> z. B. "AnzahlFall" ist, dann werden die aufsummierten (Kumulierten) Gesamtinfektionen pro Bundesland
@@ -63,12 +74,13 @@ class RKIAnalyzer:
 
         """
         df = self.data[self.data.Geschlecht == sexualityTarget]  # matrisi az hame zan ha ya ...
+        df = df[df.Bundesland == bundesland]
         col = df[columnName]  # teedade mariza dar yek sotun
         col = col.resample('w').agg({columnName: 'sum'})  # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()
 
-    def getWeeklySumOfAllData(self, columnName):
+    def getWeeklySumOfAllData(self, columnName, bundesland, startDate, endDate):
         """
         Diese Funktion unterscheidet die Zahlen von Tote mit Infizierte Personen.
 
@@ -76,8 +88,14 @@ class RKIAnalyzer:
         :param bundesland: Name des Bundeslands
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
         """
-        df = self.data  # matrisi az hame zan ha ya ...
-        col = df[columnName]  # teedade mariza dar yek sotun
+        df = self.data[self.data.Bundesland == bundesland]  # matrisi az hame zan ha ya ...
+        newDf = pd.DataFrame(df.keys())
+        i = 0
+        while i < len(df):
+            if self.compareTwoDates(str(df.values[i][8])[0:7].replace("-",""), startDate, endDate):
+                newDf.append(df.values[i])
+            i = i + 1
+        col = newDf[columnName]  # teedade mariza dar yek sotun
         col = col.resample('M').agg({columnName: 'sum'})  # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()

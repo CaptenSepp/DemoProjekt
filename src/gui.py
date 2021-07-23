@@ -41,11 +41,11 @@ class App(QMainWindow):
 
         self.StartDateSelect = QComboBox()
         paramWidget.addWidget(self.StartDateSelect)
-        self.StartDateSelect.setMinimumWidth(100)
+        self.StartDateSelect.setMinimumWidth(200)
 
         self.EndDateSelect = QComboBox()
         paramWidget.addWidget(self.EndDateSelect)
-        self.EndDateSelect.setMinimumWidth(100)
+        self.EndDateSelect.setMinimumWidth(200)
 
         paramWidget.addStretch()
         TopVLayout.addLayout(paramWidget)
@@ -56,6 +56,9 @@ class App(QMainWindow):
         self.setWindowIcon(QIcon('icon.png'))
         self.resize(800, 400)
         self.AnalyseSelect.currentTextChanged.connect(self.parameterChanged)
+        self.BundeslandSelect.currentTextChanged.connect(self.parameterChanged)
+        self.StartDateSelect.currentTextChanged.connect(self.parameterChanged)
+        self.EndDateSelect.currentTextChanged.connect(self.parameterChanged)
         self.show()
 
         if guiReadyFunction:
@@ -80,18 +83,21 @@ class App(QMainWindow):
         :return: None
         """
         choice = self.AnalyseSelect.currentText()
+        bundesland = self.BundeslandSelect.currentText()
+        startDate = self.StartDateSelect.currentText()
+        endDate = self.EndDateSelect.currentText()
         ax = self.mplcanvas.ax
         # object az mplcanvas   fig.add_subplot(111)
         ax.cla()
         # ax nemudaras ke ma mikhaym
-        if (choice == 'M-W-Unbekannt'):
-            self.plotFunction(ax, 'M')
-            self.plotFunction(ax, 'W')
-            self.plotFunction(ax, 'unbekannt')
-        elif (choice == 'Tod-Anzahlfall'):
-            self.plotFunction(ax, 'AnzahlFall')
-        # bundesland = self.BundeslandSelect.currentText()
-        self.mplcanvas.draw()
+        if (choice != "" and bundesland != "" and startDate != "" and endDate!= ""):
+            if (choice == 'M-W-Unbekannt'):
+                self.plotFunction(ax, 'M', bundesland, startDate, endDate)
+                self.plotFunction(ax, 'W', bundesland, startDate, endDate)
+                self.plotFunction(ax, 'unbekannt', bundesland, startDate, endDate)
+            elif (choice == 'Tod-Anzahlfall'):
+                self.plotFunction(ax, 'AnzahlFall', bundesland, startDate, endDate)
+            self.mplcanvas.draw()
 
     def setter(self, bundeslands, dates):  # todo
         """
@@ -114,7 +120,6 @@ class App(QMainWindow):
         self.EndDateSelect.clear()
         for i in dates:
             self.EndDateSelect.addItem(i)
-            # self.EndDateSelect.addItem((str(i))[0:7])
 
     def setBundesland(self, listeBundeslaender):  # todo inja bayad
         """

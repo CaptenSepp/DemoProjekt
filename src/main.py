@@ -5,7 +5,7 @@ from RKIAnalyzer import RKIAnalyzer
 from gui import App
 
 
-def plotFunction(ax, choice):
+def plotFunction(ax, choice, bundesland, startDate, endDate):
     """
     Diese Funktion wird aufgerufen, wenn der Benutzer ein anderes Bundesland wählt oder direkt nach dem Start.
     :param ax: Matplotlib Ax-Objekt. Mit z. b. ax.plot kann gezeichnet werden.
@@ -14,24 +14,21 @@ def plotFunction(ax, choice):
     """
 
     if (choice == 'AnzahlFall'):
-        dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall')  # maghadire nemudar migire az getWeek... az RKI Analiz
+        dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall', bundesland=bundesland, startDate=startDate,
+                                                 endDate=endDate)  # maghadire nemudar migire az getWeek... az RKI Analiz
         ax.plot(dataIll.index, dataIll, label=choice)  # plot misaze azash
-        dataDead = analyzer.getWeeklySumOfAllData(columnName='AnzahlTodesfall')
+        dataDead = analyzer.getWeeklySumOfAllData(columnName='AnzahlTodesfall', bundesland=bundesland,
+                                                  startDate=startDate,
+                                                  endDate=endDate)
         ax.plot(dataDead.index, dataDead, label='AnzahlTodesfall')
-
-        # sharedDataBundesland=analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
-        # sharedDataDatum=analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
-
         ax.set_title('Tod- und Anzahlfälle')
         ax.legend()
         ax.grid()
     else:
-        dataIll = analyzer.getWeeklySumOfEachSexuality(columnName='AnzahlFall', sexualityTarget=choice)
+        dataIll = analyzer.getWeeklySumOfEachSexuality(columnName='AnzahlFall', sexualityTarget=choice,
+                                                       bundesland=bundesland, startDate=startDate,
+                                                       endDate=endDate)
         ax.plot(dataIll.index, dataIll, label=choice)
-
-        # sharedDataBundesland = analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
-        # sharedDataDatum = analyzer.getWeeklyCumulatedDataForAnzahfall(columnName='Bundesland')
-
         ax.set_title('Männer/Frauen/Unbekannt')
         ax.legend()
         ax.grid()
@@ -49,6 +46,7 @@ def guiReadyFunction(window):
 
     window.setter(analyzer.getBundesland(), analyzer.getDate())
     window.showStatusText("Bereit")
+
 
 if __name__ == '__main__':
     analyzer = RKIAnalyzer()  # todo , IN NEMIDOONAM CHIKAR MIKONE
