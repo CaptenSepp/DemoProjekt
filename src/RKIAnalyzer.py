@@ -4,7 +4,6 @@ import time
 import datetime
 
 
-
 class RKIAnalyzer:
     def __init__(self):
         data = pd.DataFrame()
@@ -47,21 +46,25 @@ class RKIAnalyzer:
 
     def getDate(self):
         result = []
-        dates = self.data.Meldedatum.unique()
+        dates = self.data['Meldedatum'].unique()
         for i in range(len(dates)):
-            j = str(dates[i])[0:10].replace("T", " ")
+            j = (dates[i])
             result.append(j)
         result = set(result)
         return sorted(result)
 
+    # j = str(dates[i])[0:10].replace("T", " ")
     def compareTwoDates(self, targetDate, startDate, endDate):
-        targetDate = int(targetDate[0:10].replace("-",""))
-        startDate = int(startDate[0:10].replace("-",""))
-        endDate = int(endDate[0:10].replace("-",""))
-        if startDate < targetDate < endDate:
+        targetDate = int(targetDate[0:10].replace("-", ""))
+        startDate = int(startDate[0:10].replace("-", ""))
+        endDate = int(endDate[0:10].replace("-", ""))
+        if startDate <= targetDate <= endDate:
             return True
         return False
 
+    # targetDate = int(targetDate[0:10].replace("-", ""))
+    # startDate = int(startDate[0:10].replace("-", ""))
+    # endDate = int(endDate[0:10].replace("-", ""))
     def getWeeklySumOfEachSexuality(self, columnName, sexualityTarget, bundesland, startDate, endDate):
         """
         Ermittelt aus dem Datensatz wöchentlich gruppiert und aufsummiert die Zahlen einer Spalte.
@@ -73,10 +76,13 @@ class RKIAnalyzer:
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
 
         """
-        df = self.data[self.data.Geschlecht == sexualityTarget]  # matrisi az hame zan ha ya ...
+        df = self.data[self.data.Geschlecht == sexualityTarget]                        # matrisi az hame zan ha ya ...
         df = df[df.Bundesland == bundesland]
-        col = df[columnName]  # teedade mariza dar yek sotun
-        col = col.resample('w').agg({columnName: 'sum'})  # majmooee hame aadade sotun
+
+        newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
+        col = newDf[columnName]
+
+        col = col.resample('w').agg({columnName: 'sum'})                                   # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()
 
@@ -88,14 +94,16 @@ class RKIAnalyzer:
         :param bundesland: Name des Bundeslands
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
         """
-        df = self.data[self.data.Bundesland == bundesland]  # matrisi az hame zan ha ya ...
-        newDf = pd.DataFrame(df.keys())
-        i = 0
-        while i < len(df):
-            if self.compareTwoDates(str(df.values[i][8])[0:7].replace("-",""), startDate, endDate):
-                newDf.append(df.values[i])
-            i = i + 1
-        col = newDf[columnName]  # teedade mariza dar yek sotun
-        col = col.resample('M').agg({columnName: 'sum'})  # majmooee hame aadade sotun
+        df = self.data[self.data.Bundesland == bundesland]                                   # matrisi az hame zan ha ya ...# todo self.data.Bundeslan
+                                                                                           #todo - d isnt the same as sef´lf.data[bundesland]
+        newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
+        col = newDf[columnName]                                                             # teedade mariza dar yek sotun
+        col = col.resample('w').agg({columnName: 'sum'})                                   # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()
+    # newDf = pd.DataFrame(df.keys())
+    # i = 0
+    # while i < len(df):
+    #     if self.compareTwoDates(str(df.values[i][8])[0:7].replace("-", ""), startDate, endDate):
+    #         newDf.append(df.values[i])
+    #     i = i + 1

@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 
 
 class MplCanvas(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):  # 100 hamechi ro taghir mide
+    def __init__(self, parent=None, width=5, height=4, dpi=100):                      # 100 hamechi ro taghir mide
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.ax = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
@@ -26,7 +26,7 @@ class App(QMainWindow):
 
         TopVLayout = QVBoxLayout()
 
-        self.mplcanvas = MplCanvas()  # inja Classe Mplcanvas estefade shode
+        self.mplcanvas = MplCanvas()                                   # inja Classe Mplcanvas estefade shode
         TopVLayout.addWidget(self.mplcanvas)
 
         paramWidget = QHBoxLayout()
@@ -85,10 +85,8 @@ class App(QMainWindow):
         bundesland = self.BundeslandSelect.currentText()
         startDate = self.StartDateSelect.currentText()
         endDate = self.EndDateSelect.currentText()
-        ax = self.mplcanvas.ax
-        # object az mplcanvas   fig.add_subplot(111)
-        ax.cla()
-        # ax nemudaras ke ma mikhaym
+        ax = self.mplcanvas.ax                                              # object az mplcanvas   fig.add_subplot(111)
+        ax.cla()                                                            # ax nemudaras ke ma mikhaym
         if (choice != "" and bundesland != "" and startDate != "" and endDate!= ""):
             if (choice == 'M-W-Unbekannt'):
                 self.plotFunction(ax, 'M', bundesland, startDate, endDate)
@@ -114,11 +112,11 @@ class App(QMainWindow):
 
         self.StartDateSelect.clear()
         for i in dates:
-            self.StartDateSelect.addItem(i)
+            self.StartDateSelect.addItem(str(i))
 
         self.EndDateSelect.clear()
         for i in dates:
-            self.EndDateSelect.addItem(i)
+            self.EndDateSelect.addItem(str(i))
 
     def setBundesland(self, listeBundeslaender):  # todo inja bayad
         """

@@ -15,8 +15,8 @@ def plotFunction(ax, choice, bundesland, startDate, endDate):
 
     if (choice == 'AnzahlFall'):
         dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall', bundesland=bundesland, startDate=startDate,
-                                                 endDate=endDate)  # maghadire nemudar migire az getWeek... az RKI Analiz
-        ax.plot(dataIll.index, dataIll, label=choice)  # plot misaze azash
+                                                 endDate=endDate)                           # maghadire nemudar migire az getWeek... az RKI Analiz
+        ax.plot(dataIll.index, dataIll, label=choice)                                       # plot misaze azash
         dataDead = analyzer.getWeeklySumOfAllData(columnName='AnzahlTodesfall', bundesland=bundesland,
                                                   startDate=startDate,
                                                   endDate=endDate)
@@ -41,7 +41,7 @@ def guiReadyFunction(window):
     """
     window.showStatusText("Lese Daten. Bitte warten....", executeEventLoop=True)
 
-    fn = '../daten/RKI_COVID19_short.csv'  # import etelaat az file
+    fn = '../daten/RKI_COVID19_short.csv'                                      # import etelaat az file
     analyzer.loadDataFromFile(fn, filetype='csv')
 
     window.setter(analyzer.getBundesland(), analyzer.getDate())
@@ -53,7 +53,4 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     w = App(plotFunction=plotFunction, guiReadyFunction=guiReadyFunction)
-
-    # App(plotFunction=plotFunctionAnzahl,guiReadyFunction=guiReadyFunction)  # Starte Mane injas, ke ettelaat mire be Classe App az GUI # todo inja oomadim bokonimesh dota plotfunction
-    # App(plotFunction=plotFunctionTodes, guiReadyFunction=guiReadyFunction)
     sys.exit(app.exec_())
