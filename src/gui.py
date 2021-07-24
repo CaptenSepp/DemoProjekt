@@ -13,12 +13,11 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 
-class MplCanvas(FigureCanvasQTAgg):  #
+class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):  # 100 hamechi ro taghir mide
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.ax = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
-
 
 class App(QMainWindow):
     def __init__(self, plotFunction, guiReadyFunction=None):
@@ -127,6 +126,7 @@ class App(QMainWindow):
         :param listeBundeslaender: Liste mit Strings der Bundesland-Namen
         :return: None
         """
+
         self.BundeslandSelect.clear()
         for bl in listeBundeslaender:
             self.BundeslandSelect.addItem(bl)
