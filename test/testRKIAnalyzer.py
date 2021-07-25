@@ -63,12 +63,18 @@ class testRKIData(unittest.TestCase):
 
     def testWeeklySumOfEachSexuality(self):
         mut = RKIAnalyzer()
-        mut.loadDataFromFile(self.datastream, filetype='csv')
-        result = mut.getWeeklySumOfEachSexuality(self, columnName, sexuality, bundesland, startDate, endDate)
-        expected = {'Niedersachsen', 'Bayern', 'Hamburg', 'Brandenburg', 'Nordrhein-Westfalen', 'Rheinland-Pfalz',
-                    'Sachsen', 'Berlin', 'Baden-Württemberg'}
+        columnName = 'AnzahlFall'
+        sexuality = 'W'
+        bundesland = 'Hamburg'
+        startDate = '2020/11/02 00:00:00'
+        endDate = '2021/02/25 00:00:00'
 
-        self.assertSetEqual(result, expected)
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getWeeklySumOfEachSexuality(columnName, sexuality, bundesland, startDate, endDate)
+        result = result.values.tolist()
+        expected = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8]                 # die Summe bleibt gleich bis zum letze Woche
+
+        self.assertEqual(result, expected)
 
     def testBundeslaender(self):
         mut = RKIAnalyzer()

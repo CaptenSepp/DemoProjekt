@@ -87,6 +87,8 @@ class App(QMainWindow):
         endDate = self.EndDateSelect.currentText()
         ax = self.mplcanvas.ax                                              # object az mplcanvas   fig.add_subplot(111)
         ax.cla()                                                            # ax nemudaras ke ma mikhaym
+
+
         if (choice != "" and bundesland != "" and startDate != "" and endDate!= ""):
             if (choice == 'M-W-Unbekannt'):
                 self.plotFunction(ax, 'M', bundesland, startDate, endDate)
@@ -112,11 +114,11 @@ class App(QMainWindow):
 
         self.StartDateSelect.clear()
         for i in dates:
-            self.StartDateSelect.addItem(str(i))
+            self.StartDateSelect.addItem(str(i)[0:10])
 
         self.EndDateSelect.clear()
         for i in dates:
-            self.EndDateSelect.addItem(str(i))
+            self.EndDateSelect.addItem(str(i)[0:10])
 
     def setBundesland(self, listeBundeslaender):  # todo inja bayad
         """
@@ -128,6 +130,7 @@ class App(QMainWindow):
         self.BundeslandSelect.clear()
         for bl in listeBundeslaender:
             self.BundeslandSelect.addItem(bl)
+
 
 # if __name__ == '__main__': # todo in code payin kari nemikone, baraye chi neveshte shode, ma kamentesh kardim baz kar mikone
 #     import numpy as np

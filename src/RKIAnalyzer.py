@@ -101,6 +101,7 @@ class RKIAnalyzer:
         col = col.resample('w').agg({columnName: 'sum'})                                   # majmooee hame aadade sotun
         col = col.droplevel(0)
         return col.cumsum()
+
     # newDf = pd.DataFrame(df.keys())
     # i = 0
     # while i < len(df):
