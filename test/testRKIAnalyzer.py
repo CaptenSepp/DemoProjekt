@@ -39,17 +39,19 @@ class testRKIData(unittest.TestCase):
     def testBundeslaender(self):
         mut = RKIAnalyzer()
         mut.loadDataFromFile(self.datastream, filetype='csv')
-        result = mut.getBundeslaender()
+        result = mut.getBundesland()
         expected = {'Niedersachsen', 'Bayern', 'Hamburg', 'Brandenburg', 'Nordrhein-Westfalen', 'Rheinland-Pfalz',
                     'Sachsen', 'Berlin', 'Baden-Württemberg'}
 
         self.assertSetEqual(result, expected)
+
 
 class testFileTypes(unittest.TestCase):
     def testUnknown(self):
         mut = RKIAnalyzer()
         with self.assertRaises(NotImplementedError):
             mut.loadDataFromFile('doesnotexistfile.data', filetype='xxx')
+
 
 class testReadPickle(unittest.TestCase):
     def setUp(self) -> None:
@@ -72,7 +74,7 @@ class testReadPickle(unittest.TestCase):
     def testLoad(self):
         mut = RKIAnalyzer()
         mut.loadDataFromFile(self.fn, filetype='pickle')
-        result = mut.getBundeslaender()
+        result = mut.getBundesland()
         expected = {'Baden-Württemberg', 'Bayern'}
         self.assertSetEqual(expected, result)
 

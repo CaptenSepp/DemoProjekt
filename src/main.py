@@ -25,11 +25,11 @@ def plotFunction(ax, choice, bundesland, startDate, endDate):
         ax.legend()
         ax.grid()
     else:
-        dataIll = analyzer.getWeeklySumOfEachSexuality(columnName='AnzahlFall', sexualityTarget=choice,
+        dataIll = analyzer.getWeeklySumOfEachSexuality(columnName='AnzahlFall', sexuality=choice,
                                                        bundesland=bundesland, startDate=startDate,
                                                        endDate=endDate)
         ax.plot(dataIll.index, dataIll, label=choice)
-        ax.set_title('Männer/Frauen/Unbekannt')
+        ax.set_title('Anzahl der neu infizierten Männer/Frauen/Unbekannt')
         ax.legend()
         ax.grid()
 

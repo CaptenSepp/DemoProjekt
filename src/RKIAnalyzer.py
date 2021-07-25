@@ -65,7 +65,7 @@ class RKIAnalyzer:
     # targetDate = int(targetDate[0:10].replace("-", ""))
     # startDate = int(startDate[0:10].replace("-", ""))
     # endDate = int(endDate[0:10].replace("-", ""))
-    def getWeeklySumOfEachSexuality(self, columnName, sexualityTarget, bundesland, startDate, endDate):
+    def getWeeklySumOfEachSexuality(self, columnName, sexuality, bundesland, startDate, endDate):
         """
         Ermittelt aus dem Datensatz wöchentlich gruppiert und aufsummiert die Zahlen einer Spalte.
         Wenn <columnName> z. B. "AnzahlFall" ist, dann werden die aufsummierten (Kumulierten) Gesamtinfektionen pro Bundesland
@@ -76,7 +76,7 @@ class RKIAnalyzer:
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
 
         """
-        df = self.data[self.data.Geschlecht == sexualityTarget]                        # matrisi az hame zan ha ya ...
+        df = self.data[self.data.Geschlecht == sexuality]                        # matrisi az hame zan ha ya ...
         df = df[df.Bundesland == bundesland]
 
         newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
