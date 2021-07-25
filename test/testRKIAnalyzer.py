@@ -6,6 +6,7 @@ from io import StringIO
 from src.RKIAnalyzer import RKIAnalyzer
 import datetime as dt
 import tempfile
+import numpy as np
 
 import pandas as pd
 
@@ -53,13 +54,33 @@ class testRKIData(unittest.TestCase):
         # expected = {'M', 'W', 'unbekannt'} # todo what about unbekannt??, it doesn't find it in the first Bundesland and time, so Error i guess
         self.assertSetEqual(result, expected)
 
-    def testDate(self):
+    def testDate(self):  # todo not working
         mut = RKIAnalyzer()
         mut.loadDataFromFile(self.datastream, filetype='csv')
         result = mut.getDate()
-        expected = {}
+        expected = {
+            [numpy.datetime64('2020-04-03T00:00:00.000000000'), numpy.datetime64('2020-05-05T00:00:00.000000000'),
+             numpy.datetime64('2020-10-15T00:00:00.000000000'), numpy.datetime64('2020-11-02T00:00:00.000000000'),
+             numpy.datetime64('2020-11-12T00:00:00.000000000'), numpy.datetime64('2020-11-15T00:00:00.000000000'),
+             numpy.datetime64('2020-11-29T00:00:00.000000000'), numpy.datetime64('2020-12-22T00:00:00.000000000'),
+             numpy.datetime64('2021-01-25T00:00:00.000000000'), numpy.datetime64('2021-02-06T00:00:00.000000000'),
+             numpy.datetime64('2021-02-17T00:00:00.000000000'), numpy.datetime64('2021-02-21T00:00:00.000000000'),
+             numpy.datetime64('2021-02-25T00:00:00.000000000'), numpy.datetime64('2021-03-25T00:00:00.000000000'),
+             numpy.datetime64('2021-03-29T00:00:00.000000000'), numpy.datetime64('2021-04-15T00:00:00.000000000'),
+             numpy.datetime64('2021-04-28T00:00:00.000000000')]}
 
         self.assertSetEqual(result, expected)
+
+    def testCompareTwoDates(self):  # todo not working
+        mut = RKIAnalyzer()
+        targetDate = '2021/04/28 00:00:00'
+        startDate = '2020/10/15 00:00:00'
+        endDate = '2020/11/02 00:00:00'
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.compareTwoDates(targetDate, startDate, endDate)
+        expected = {}
+
+        self.assertEqual(result, expected)
 
     def testWeeklySumOfEachSexuality(self):
         mut = RKIAnalyzer()
@@ -73,7 +94,7 @@ class testRKIData(unittest.TestCase):
         mut.loadDataFromFile(self.datastream, filetype='csv')
         result = mut.getWeeklySumOfEachSexuality(columnName, sexuality, bundesland, altersgruppe, startDate, endDate)
         result = result.values.tolist()
-        expected = [6]                                                     # die Summe bleibt gleich bis zum letze Woche
+        expected = [6]  # die Summe bleibt gleich bis zum letze Woche
 
         self.assertEqual(result, expected)
 

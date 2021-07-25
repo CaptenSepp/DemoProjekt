@@ -16,14 +16,14 @@ def plotFunction(ax, choice, bundesland, altersgruppe, startDate, endDate):
     if (choice == 'AnzahlFall'):
         dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall', bundesland=bundesland,
                                                  altersgruppe=altersgruppe, startDate=startDate,
-                                                 endDate=endDate)  # maghadire nemudar migire az getWeek... az RKI Analiz
-        ax.plot(dataIll.index, dataIll, label=choice)  # plot misaze azash
+                                                 endDate=endDate)                     # maghadire nemudar migire az getWeek... az RKI Analiz
+        ax.plot(dataIll.index, dataIll, label=choice)                                 # plot misaze azash
         dataDead = analyzer.getWeeklySumOfAllData(columnName='AnzahlTodesfall', bundesland=bundesland,
                                                   altersgruppe=altersgruppe,
                                                   startDate=startDate,
                                                   endDate=endDate)
         ax.plot(dataDead.index, dataDead, label='AnzahlTodesfall')
-        ax.set_title('Tod- und Anzahlfälle')
+        ax.set_title('Anzahl der Neuinfektionen im Vergleich zu den Todesfällen')
         ax.legend()
         ax.grid()
     else:
@@ -32,7 +32,7 @@ def plotFunction(ax, choice, bundesland, altersgruppe, startDate, endDate):
                                                        startDate=startDate,
                                                        endDate=endDate)
         ax.plot(dataIll.index, dataIll, label=choice)
-        ax.set_title('Anzahl der neu infizierten Männer/Frauen/Unbekannt')
+        ax.set_title('Anzahl der Neuinfizierten nach Geschlecht')
         ax.legend()
         ax.grid()
 
@@ -48,7 +48,7 @@ def guiReadyFunction(window):
     fn = '../daten/RKI_COVID19_short.csv'  # import etelaat az file
     analyzer.loadDataFromFile(fn, filetype='csv')
 
-    window.setter(analyzer.getBundesland(), analyzer.getAltersgruppe(), analyzer.getDate())
+    window.ComboBoxSetter(analyzer.getBundesland(), analyzer.getAltersgruppe(), analyzer.getDate())
     window.showStatusText("Bereit")
 
 

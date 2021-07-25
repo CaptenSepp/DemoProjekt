@@ -42,11 +42,13 @@ class RKIAnalyzer:
 
     def getBundesland(self):
         result = self.data.Bundesland.unique()
-        return set(result)
+        result = set(result)
+        return sorted(result)
 
     def getAltersgruppe(self):
         result = self.data.Altersgruppe.unique()
-        return set(result)
+        result = set(result)
+        return sorted(result)
 
     def getDate(self):
         result = []
