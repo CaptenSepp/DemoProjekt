@@ -43,10 +43,16 @@ class testRKIData(unittest.TestCase):
         result = mut.getBundesland()
         expected = {'Niedersachsen', 'Bayern', 'Hamburg', 'Brandenburg', 'Nordrhein-Westfalen', 'Rheinland-Pfalz',
                     'Sachsen', 'Berlin', 'Baden-Württemberg'}
+        self.assertSetEqual(set(result), expected)
 
-        self.assertSetEqual(result, expected)
+    def testAltersgruppen(self):
+        mut = RKIAnalyzer()
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getAltersgruppe()
+        expected = {'A60-A79', 'A60-A79', 'A15-A34', 'A80+', 'A00-A04', 'A35-A59', 'A05-A14'}
+        self.assertSetEqual(set(result), expected)
 
-    def testGeschlecht(self):
+    def testGeschlecht(self): # todo how to do the coverage and see the percentage again? it doesn't show the update i did
         mut = RKIAnalyzer()
         mut.loadDataFromFile(self.datastream, filetype='csv')
         result = mut.getGeschlecht()
@@ -98,24 +104,15 @@ class testRKIData(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
-    def testBundeslaender(self):
-        mut = RKIAnalyzer()
-        mut.loadDataFromFile(self.datastream, filetype='csv')
-        result = mut.getBundesland()
-        expected = {'Niedersachsen', 'Bayern', 'Hamburg', 'Brandenburg', 'Nordrhein-Westfalen', 'Rheinland-Pfalz',
-                    'Sachsen', 'Berlin', 'Baden-Württemberg'}
 
-        self.assertSetEqual(result, expected)
-
-
-class testFileTypes(unittest.TestCase):
+class testFileTypes(unittest.TestCase):  # todo how can i use this??
     def testUnknown(self):
         mut = RKIAnalyzer()
         with self.assertRaises(NotImplementedError):
             mut.loadDataFromFile('doesnotexistfile.data', filetype='xxx')
 
 
-class testReadPickle(unittest.TestCase):
+class testRead(unittest.TestCase):  # todo how can i use this??
     def setUp(self) -> None:
         datastr = """
             FID,IdBundesland,Bundesland,Landkreis,Altersgruppe,Geschlecht,AnzahlFall,AnzahlTodesfall,Meldedatum,IdLandkreis,Datenstand,NeuerFall,NeuerTodesfall,Refdatum,NeuGenesen,AnzahlGenesen,IstErkrankungsbeginn,Altersgruppe2
