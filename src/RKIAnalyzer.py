@@ -25,9 +25,9 @@ class RKIAnalyzer:
          : param filetype: type of file (pickle / csv)
          : return: None
         """
-        if filetype == 'pickle':
-            self.data = pd.read_pickle(filename)
-        elif filetype == 'csv':
+        # if filetype == 'pickle': # todo muss hier unbedings pickle sein
+        #     self.data = pd.read_pickle(filename)
+        if filetype == 'csv':
             self.data = pd.read_csv(filename, parse_dates=['Meldedatum', 'Refdatum'], index_col='Refdatum')
         else:
             raise NotImplementedError()
