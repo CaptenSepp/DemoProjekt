@@ -45,6 +45,40 @@ class testRKIData(unittest.TestCase):
 
         self.assertSetEqual(result, expected)
 
+    def testGeschlecht(self):
+        mut = RKIAnalyzer()
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getGeschlecht()
+        expected = {'M', 'W'}
+        # expected = {'M', 'W', 'unbekannt'} # todo what about unbekannt??, it doesn't find it in the first Bundesland and time, so Error i guess
+        self.assertSetEqual(result, expected)
+
+    def testDate(self):
+        mut = RKIAnalyzer()
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getDate()
+        expected = {}
+
+        self.assertSetEqual(result, expected)
+
+    def testWeeklySumOfEachSexuality(self):
+        mut = RKIAnalyzer()
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getWeeklySumOfEachSexuality(self, columnName, sexuality, bundesland, startDate, endDate)
+        expected = {'Niedersachsen', 'Bayern', 'Hamburg', 'Brandenburg', 'Nordrhein-Westfalen', 'Rheinland-Pfalz',
+                    'Sachsen', 'Berlin', 'Baden-Württemberg'}
+
+        self.assertSetEqual(result, expected)
+
+    def testBundeslaender(self):
+        mut = RKIAnalyzer()
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getBundesland()
+        expected = {'Niedersachsen', 'Bayern', 'Hamburg', 'Brandenburg', 'Nordrhein-Westfalen', 'Rheinland-Pfalz',
+                    'Sachsen', 'Berlin', 'Baden-Württemberg'}
+
+        self.assertSetEqual(result, expected)
+
 
 class testFileTypes(unittest.TestCase):
     def testUnknown(self):

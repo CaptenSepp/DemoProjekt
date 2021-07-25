@@ -76,7 +76,7 @@ class RKIAnalyzer:
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
 
         """
-        df = self.data[self.data.Geschlecht == sexuality]                        # matrisi az hame zan ha ya ...
+        df = self.data[self.data.Geschlecht == sexuality]                               # matrisi az hame zan ha ya ...
         df = df[df.Bundesland == bundesland]
 
         newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
