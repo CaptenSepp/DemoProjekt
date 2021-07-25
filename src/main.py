@@ -5,7 +5,7 @@ from RKIAnalyzer import RKIAnalyzer
 from gui import App
 
 
-def plotFunction(ax, choice, bundesland, startDate, endDate):
+def plotFunction(ax, choice, bundesland, altersgruppe, startDate, endDate):
     """
     Diese Funktion wird aufgerufen, wenn der Benutzer ein anderes Bundesland wählt oder direkt nach dem Start.
     :param ax: Matplotlib Ax-Objekt. Mit z. b. ax.plot kann gezeichnet werden.
@@ -14,10 +14,12 @@ def plotFunction(ax, choice, bundesland, startDate, endDate):
     """
 
     if (choice == 'AnzahlFall'):
-        dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall', bundesland=bundesland, startDate=startDate,
-                                                 endDate=endDate)                           # maghadire nemudar migire az getWeek... az RKI Analiz
-        ax.plot(dataIll.index, dataIll, label=choice)                                       # plot misaze azash
+        dataIll = analyzer.getWeeklySumOfAllData(columnName='AnzahlFall', bundesland=bundesland,
+                                                 altersgruppe=altersgruppe, startDate=startDate,
+                                                 endDate=endDate)  # maghadire nemudar migire az getWeek... az RKI Analiz
+        ax.plot(dataIll.index, dataIll, label=choice)  # plot misaze azash
         dataDead = analyzer.getWeeklySumOfAllData(columnName='AnzahlTodesfall', bundesland=bundesland,
+                                                  altersgruppe=altersgruppe,
                                                   startDate=startDate,
                                                   endDate=endDate)
         ax.plot(dataDead.index, dataDead, label='AnzahlTodesfall')
@@ -26,12 +28,14 @@ def plotFunction(ax, choice, bundesland, startDate, endDate):
         ax.grid()
     else:
         dataIll = analyzer.getWeeklySumOfEachSexuality(columnName='AnzahlFall', sexuality=choice,
-                                                       bundesland=bundesland, startDate=startDate,
+                                                       bundesland=bundesland, altersgruppe=altersgruppe,
+                                                       startDate=startDate,
                                                        endDate=endDate)
         ax.plot(dataIll.index, dataIll, label=choice)
         ax.set_title('Anzahl der neu infizierten Männer/Frauen/Unbekannt')
         ax.legend()
         ax.grid()
+
 
 def guiReadyFunction(window):
     """
@@ -41,10 +45,10 @@ def guiReadyFunction(window):
     """
     window.showStatusText("Lese Daten. Bitte warten....", executeEventLoop=True)
 
-    fn = '../daten/RKI_COVID19_short.csv'                                      # import etelaat az file
+    fn = '../daten/RKI_COVID19_short.csv'  # import etelaat az file
     analyzer.loadDataFromFile(fn, filetype='csv')
 
-    window.setter(analyzer.getBundesland(), analyzer.getDate())
+    window.setter(analyzer.getBundesland(), analyzer.getAltersgruppe(), analyzer.getDate())
     window.showStatusText("Bereit")
 
 

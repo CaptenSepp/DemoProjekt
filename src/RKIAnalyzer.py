@@ -44,6 +44,10 @@ class RKIAnalyzer:
         result = self.data.Bundesland.unique()
         return set(result)
 
+    def getAltersgruppe(self):
+        result = self.data.Altersgruppe.unique()
+        return set(result)
+
     def getDate(self):
         result = []
         dates = self.data['Meldedatum'].unique()
@@ -65,7 +69,7 @@ class RKIAnalyzer:
     # targetDate = int(targetDate[0:10].replace("-", ""))
     # startDate = int(startDate[0:10].replace("-", ""))
     # endDate = int(endDate[0:10].replace("-", ""))
-    def getWeeklySumOfEachSexuality(self, columnName, sexuality, bundesland, startDate, endDate):
+    def getWeeklySumOfEachSexuality(self, columnName, sexuality, bundesland, altersgruppe, startDate, endDate):
         """
         Ermittelt aus dem Datensatz wöchentlich gruppiert und aufsummiert die Zahlen einer Spalte.
         Wenn <columnName> z. B. "AnzahlFall" ist, dann werden die aufsummierten (Kumulierten) Gesamtinfektionen pro Bundesland
@@ -78,6 +82,7 @@ class RKIAnalyzer:
         """
         df = self.data[self.data.Geschlecht == sexuality]                               # matrisi az hame zan ha ya ...
         df = df[df.Bundesland == bundesland]
+        df = df[df.Altersgruppe == altersgruppe]
 
         newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
         col = newDf[columnName]
@@ -86,7 +91,7 @@ class RKIAnalyzer:
         col = col.droplevel(0)
         return col.cumsum()
 
-    def getWeeklySumOfAllData(self, columnName, bundesland, startDate, endDate):
+    def getWeeklySumOfAllData(self, columnName, bundesland, altersgruppe, startDate, endDate):
         """
         Diese Funktion unterscheidet die Zahlen von Tote mit Infizierte Personen.
 
@@ -96,6 +101,7 @@ class RKIAnalyzer:
         """
         df = self.data[self.data.Bundesland == bundesland]                                   # matrisi az hame zan ha ya ...# todo self.data.Bundeslan
                                                                                            #todo - d isnt the same as sef´lf.data[bundesland]
+        df = df[df.Altersgruppe == altersgruppe]
         newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
         col = newDf[columnName]                                                             # teedade mariza dar yek sotun
         col = col.resample('w').agg({columnName: 'sum'})                                   # majmooee hame aadade sotun

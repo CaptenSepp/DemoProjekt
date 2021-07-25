@@ -66,13 +66,14 @@ class testRKIData(unittest.TestCase):
         columnName = 'AnzahlFall'
         sexuality = 'W'
         bundesland = 'Hamburg'
+        altersgruppe = 'A35-A59'
         startDate = '2020/11/02 00:00:00'
         endDate = '2021/02/25 00:00:00'
 
         mut.loadDataFromFile(self.datastream, filetype='csv')
-        result = mut.getWeeklySumOfEachSexuality(columnName, sexuality, bundesland, startDate, endDate)
+        result = mut.getWeeklySumOfEachSexuality(columnName, sexuality, bundesland, altersgruppe, startDate, endDate)
         result = result.values.tolist()
-        expected = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8]                 # die Summe bleibt gleich bis zum letze Woche
+        expected = [6]                                                     # die Summe bleibt gleich bis zum letze Woche
 
         self.assertEqual(result, expected)
 
