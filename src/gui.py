@@ -121,6 +121,7 @@ class App(QMainWindow):
         ax = self.mplcanvas.ax
         ax.cla()
 
+        # Hier wird überprüft, ob alle Parameter vorhanden sind
         if (choice != "" and bundesland != "" and startDate != "" and endDate != ""):
             if (choice == 'M-W-Unbekannt'):
                 self.plotFunction(ax, 'M', bundesland, altersgruppe, startDate, endDate)
@@ -142,6 +143,8 @@ class App(QMainWindow):
         :param Analyse: Liste mit Strings der Analyse
         :return: None
         """
+
+        # Hier werden einzelne Analyseoptionen in Combobox hinzugefügt
         self.AnalyseSelect.clear()
         self.AnalyseSelect.addItem('M-W-Unbekannt')
         self.AnalyseSelect.addItem('M')
@@ -149,6 +152,7 @@ class App(QMainWindow):
         self.AnalyseSelect.addItem('Vergleich Anzahl der Genesen und Neuinfektionen')
         self.AnalyseSelect.addItem('Vergleich Todesfälle und Neuinfektionen')
 
+        # Hier werden einzelne Auswahloptionen in Combobox hinzugefügt
         self.BundeslandSelect.clear()
         for i in bundeslands:
             self.BundeslandSelect.addItem(i)
@@ -165,8 +169,7 @@ class App(QMainWindow):
     def SaveGraph(self):  # todo das funktioniert leider nicht
         """
         Save-Button führt zu dieser Funktion.
-        Es öffnet sich ein Dialog der das abspeichern nocheinmal hinterfragen soll.
-        Funktion Speichervorgang abbrechen leider mehrmals versucht, aber gescheitert.
+        Es öffnet sich ein Dialogfenster in dem der Speichervorgang abgefragt wird.
         param: None
         return: None
         """
@@ -181,15 +184,14 @@ class App(QMainWindow):
 
     def SaveExcel(self): # todo
         """
-        Save-Button führt zu dieser Funktion.
-        Es öffnet sich ein Dialog der das abspeichern nocheinmal hinterfragen soll.
-        Funktion Speichervorgang abbrechen leider mehrmals versucht, aber gescheitert.
+        Save Excel-Button führt zu dieser Funktion.
+        Es öffnet sich ein Dialogfenster in dem der Speichervorgang abgefragt wird.
         param: None
         return: None
         """
         analyzer = RKIAnalyzer()
         msgbox = QMessageBox()
-        msgbox.setText("Die Datai wurde in der gleichen Repository gespeichert")
+        msgbox.setText("Die Datai wird in der gleichen Repository gespeichert")
         msgbox.addButton(QMessageBox.Ok)
         msgbox.exec()
         savetext = self.SaveExcelName.text()
