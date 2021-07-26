@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-import sys
-
+from RKIAnalyzer import RKIAnalyzer
 import matplotlib
-from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
@@ -24,20 +21,19 @@ class App(QMainWindow):
     def __init__(self, plotFunction, guiReadyFunction=None):
         super().__init__()
         self.plotFunction = plotFunction
-
         TopVLayout = QVBoxLayout()
-
-        self.mplcanvas = MplCanvas()  # inja Classe Mplcanvas estefade shode
-        TopVLayout.addWidget(self.mplcanvas)
+        self.mplcanvas = MplCanvas()
 
         paramWidget = QHBoxLayout()
         self.AnalyseSelect = QComboBox()
         self.AnalyseSelect.setToolTip("Hier Können Sie die Analysen auswählen")
         paramWidget.addWidget(self.AnalyseSelect)
         self.AnalyseSelect.setMinimumWidth(250)
-
-        self.BundeslandSelect = QComboBox()  # Bundesland addieren
-        self.BundeslandSelect.setToolTip("Hier Können Sie die Bundesland auswählen")
+        # Hier werden die verschiedenen Parameter in Comboboxen addiert
+        self.BundeslandSelect = QComboBox()
+        self.BundeslandSelect.setMaxVisibleItems(20)
+        tooltip = "Hier Können Sie das Bundesland auswählen" # todo beabrbeiten
+        self.BundeslandSelect.setToolTip(tooltip)
         paramWidget.addWidget(self.BundeslandSelect)
         self.BundeslandSelect.setMinimumWidth(150)
 
@@ -47,34 +43,49 @@ class App(QMainWindow):
         self.AltersgruppeSelect.setMinimumWidth(100)
 
         self.StartDateSelect = QComboBox()
-        self.StartDateSelect.setToolTip("Hier Können Sie die Start Datum auswählen")
+        self.StartDateSelect.setMaxVisibleItems(50)
+        self.StartDateSelect.setToolTip("Hier Können Sie das Startdatum auswählen")
         paramWidget.addWidget(self.StartDateSelect)
         self.StartDateSelect.setMinimumWidth(100)
 
         self.EndDateSelect = QComboBox()
-        self.EndDateSelect.setToolTip("Hier Können Sie die Ende Datum auswählen")
+        self.EndDateSelect.setMaxVisibleItems(50)
+        self.EndDateSelect.setToolTip("Hier Können Sie das Endedatum auswählen")
         paramWidget.addWidget(self.EndDateSelect)
         self.EndDateSelect.setMinimumWidth(100)
-        # **********************************************************************************
-        saveWidget = QHBoxLayout()  # todo hier funktioniert leider den Speichern nicht
-        saveWidget.addStretch()
+
+        saveWidget = QHBoxLayout()
         saveWidget.addStretch()
         self.SaveButton = QPushButton('Save Graph', self)
-        self.SaveButton.setToolTip("Name der Datei über Input rechts eingeben (ohne Dateiendung)")
+        self.SaveButton.setToolTip("Name der Datei über Input rechts eingeben (ohne Dataiformat)")
         saveWidget.addWidget(self.SaveButton)
         self.SaveName = QLineEdit()
         saveWidget.addWidget(self.SaveName)
         saveWidget.addStretch()
         TopVLayout.addLayout(saveWidget)
-        # ********************************************************************************
+        self.SaveButton.clicked.connect(self.SaveGraph)
+
+        saveExcelWidget = QHBoxLayout()
+        saveExcelWidget.addStretch()
+        self.SaveExcelButton = QPushButton('Save Excel', self)
+        self.SaveExcelButton.setToolTip("Hier Können Sie die Datai als Excel speichern")
+        saveExcelWidget.addWidget(self.SaveExcelButton)
+        self.SaveExcelName = QLineEdit()
+        saveExcelWidget.addWidget(self.SaveExcelName)
+        saveExcelWidget.addStretch()
+        TopVLayout.addLayout(saveExcelWidget)
+        self.SaveExcelButton.clicked.connect(self.SaveExcel)
+
         paramWidget.addStretch()
         TopVLayout.addLayout(paramWidget)
+        TopVLayout.addWidget(self.mplcanvas)
 
         self.setCentralWidget(QWidget())
         self.centralWidget().setLayout(TopVLayout)
         self.setWindowTitle("COVID-19 Datenauswertung")
         self.setWindowIcon(QIcon('icon.png'))
         self.resize(800, 800)
+
         self.AnalyseSelect.currentTextChanged.connect(self.parameterChanged)
         self.BundeslandSelect.currentTextChanged.connect(self.parameterChanged)
         self.AltersgruppeSelect.currentTextChanged.connect(self.parameterChanged)
@@ -106,25 +117,21 @@ class App(QMainWindow):
         bundesland = self.BundeslandSelect.currentText()
         altersgruppe = self.AltersgruppeSelect.currentText()
         startDate = self.StartDateSelect.currentText()
-        endDate = self.EndDateSelect.currentText()  # todo give the last date in the list
-        ax = self.mplcanvas.ax  # object az mplcanvas   fig.add_subplot(111)
-        ax.cla()  # ax nemudaras ke ma mikhaym
+        endDate = self.EndDateSelect.currentText()
+        ax = self.mplcanvas.ax
+        ax.cla()
 
         if (choice != "" and bundesland != "" and startDate != "" and endDate != ""):
             if (choice == 'M-W-Unbekannt'):
-                if (
-                        bundesland == 'Alle Bundesländer'):  # todo, hier muss Bundesland filter nicht mehr betrachtet werden
-                    self.plotFunction(ax, 'M', True, altersgruppe, startDate, endDate)
-                    self.plotFunction(ax, 'W', True, altersgruppe, startDate, endDate)
-                    self.plotFunction(ax, 'unbekannt', True, altersgruppe, startDate, endDate)
-                else:
-                    self.plotFunction(ax, 'M', bundesland, altersgruppe, startDate, endDate)
-                    self.plotFunction(ax, 'W', bundesland, altersgruppe, startDate, endDate)
-                    self.plotFunction(ax, 'unbekannt', bundesland, altersgruppe, startDate, endDate)
+                self.plotFunction(ax, 'M', bundesland, altersgruppe, startDate, endDate)
+                self.plotFunction(ax, 'W', bundesland, altersgruppe, startDate, endDate)
+                self.plotFunction(ax, 'unbekannt', bundesland, altersgruppe, startDate, endDate)
             elif (choice == "M"):
                 self.plotFunction(ax, 'M', bundesland, altersgruppe, startDate, endDate)
             elif (choice == "W"):
                 self.plotFunction(ax, 'W', bundesland, altersgruppe, startDate, endDate)
+            elif (choice == 'Vergleich Anzahl der Genesen und Neuinfektionen'):
+                self.plotFunction(ax, 'AnzahlGenesen', bundesland, altersgruppe, startDate, endDate)
             elif (choice == 'Vergleich Todesfälle und Neuinfektionen'):
                 self.plotFunction(ax, 'AnzahlFall', bundesland, altersgruppe, startDate, endDate)
             self.mplcanvas.draw()
@@ -137,39 +144,23 @@ class App(QMainWindow):
         """
         self.AnalyseSelect.clear()
         self.AnalyseSelect.addItem('M-W-Unbekannt')
-        self.AnalyseSelect.addItem('M')  # todo die getrennt machen, wenn ich zeit habe
+        self.AnalyseSelect.addItem('M')
         self.AnalyseSelect.addItem('W')
+        self.AnalyseSelect.addItem('Vergleich Anzahl der Genesen und Neuinfektionen')
         self.AnalyseSelect.addItem('Vergleich Todesfälle und Neuinfektionen')
 
         self.BundeslandSelect.clear()
         for i in bundeslands:
             self.BundeslandSelect.addItem(i)
-        self.BundeslandSelect.addItem('Alle Bundesländer')
-
         self.AltersgruppeSelect.clear()
         for i in altersgruppe:
             self.AltersgruppeSelect.addItem(i)
-        self.AltersgruppeSelect.addItem('Alle Altersgruppen')
-
         self.StartDateSelect.clear()
         for i in dates:
             self.StartDateSelect.addItem(str(i)[0:10])
-
         self.EndDateSelect.clear()
         for i in range(len(dates)):
-            self.EndDateSelect.addItem(str(dates[len(dates) - i - 1])[
-                                       0:10])  # todo hier will ich die letzte option von Datum liegen, letzte was im Datei gibt
-
-    # def setBundesland(self, listeBundeslaender):                                      # todo inja bayad
-    #     """
-    #     Listeneinträge in der Combobox festlegen.
-    #     :param listeBundeslaender: Liste mit Strings der Bundesland-Namen
-    #     :return: None
-    #     """
-    #
-    #     self.BundeslandSelect.clear()
-    #     for bl in listeBundeslaender:
-    #         self.BundeslandSelect.addItem(bl)
+            self.EndDateSelect.addItem(str(dates[len(dates) - i - 1])[0:10])
 
     def SaveGraph(self):  # todo das funktioniert leider nicht
         """
@@ -180,26 +171,28 @@ class App(QMainWindow):
         return: None
         """
         msgbox = QMessageBox()
-        msgbox.setText(
-            "Wenn sie den Graphen unter einem bereits existierenden Namen abspeichern, wird der alte Graph automatisch überschrieben.\n"
-            "Möchten Sie trotzdem fortfahren?\n"
-            "\n")
+        msgbox.setText("Die Datai wurde in der gleichen Repository gespeichert")
         msgbox.addButton(QMessageBox.Ok)
-        msgbox.setIcon(QMessageBox.Question)
         msgbox.exec()
         savetext = self.SaveName.text()
         img = self.mplcanvas
-        img.print_figure(
-            '//home//student//prog1_ss2021//2438125_Partsch//Projekt//Saved Figures//{}.png'.format(savetext))
-        # print("Speichern hat funktioniert")
+        save = __file__.replace('src\\gui.py', savetext + '.png')
+        img.print_figure(save)
 
-# if __name__ == '__main__': # todo in code payin kari nemikone, baraye chi neveshte shode, ma kamentesh kardim baz kar mikone
-#     import numpy as np
-#
-#     def plotFunction(ax, bundesland):
-#         print("PlotFunction('{}')".format(bundesland))
-#
-#     app = QApplication(sys.argv)
-#     window = App(plotFunction=plotFunction)
-#     window.setGeschlecht("ns,by,mp".split(',')) # bayad baraye analyze dovomam benevisim???
-#     sys.exit(app.exec_())
+    def SaveExcel(self): # todo
+        """
+        Save-Button führt zu dieser Funktion.
+        Es öffnet sich ein Dialog der das abspeichern nocheinmal hinterfragen soll.
+        Funktion Speichervorgang abbrechen leider mehrmals versucht, aber gescheitert.
+        param: None
+        return: None
+        """
+        analyzer = RKIAnalyzer()
+        msgbox = QMessageBox()
+        msgbox.setText("Die Datai wurde in der gleichen Repository gespeichert")
+        msgbox.addButton(QMessageBox.Ok)
+        msgbox.exec()
+        savetext = self.SaveExcelName.text()
+        print(analyzer.ExcelMaker.newDf)
+            # .newDf.to_excel('src\\gui.py', savetext + '.xlsx')
+
