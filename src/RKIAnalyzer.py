@@ -72,7 +72,7 @@ class RKIAnalyzer:
         :param bundesland: Name des Bundeslands, altersgrupper, Startdatum, Enddatum und Geschlechts
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
         """
-        self.ExcelMaker(bundesland, altersgruppe, startDate, endDate) # todo
+        # self.ExcelMaker(bundesland, altersgruppe, startDate, endDate) # todo
         df = self.data[self.data.Geschlecht == sexuality]  # matrisi az hame zan ha ya ...
         df = df[df.Bundesland == bundesland]
         df = df[df.Altersgruppe == altersgruppe]
@@ -93,7 +93,7 @@ class RKIAnalyzer:
         :param bundesland: Name des Bundeslands, altersgrupper, Startdatum, Enddatum
         :return: pd.Series mit dem Wochenstart-Datum als Index und den Kumulierten Werten.
         """
-        self.ExcelMaker(bundesland, altersgruppe, startDate, endDate) # todo
+        # self.ExcelMaker(bundesland, altersgruppe, startDate, endDate) # todo
         df = self.data[self.data.Bundesland == bundesland]  # matrisi az hame zan ha ya ...
         df = df[df.Altersgruppe == altersgruppe]
         newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
@@ -110,7 +110,7 @@ class RKIAnalyzer:
         :param bundesland: Name des Bundeslands, Altersgruppen, Startdatum, Enddatum
         :return: pd.Series mit dem Wochenstart-Datum als Index und den kumulierten Werten.
         """
-        self.ExcelMaker(bundesland, altersgruppe, startDate, endDate) # todo
+        # self.ExcelMaker(bundesland, altersgruppe, startDate, endDate) # todo
         df = self.data[self.data.Bundesland == bundesland]  # matrisi az hame zan ha ya ...
         df = df[df.Altersgruppe == altersgruppe]
         newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
@@ -119,17 +119,20 @@ class RKIAnalyzer:
         col = col.droplevel(0)
         return col.cumsum()
 
-    def ExcelMaker(self, sexuality, bundesland, altersgruppe, startDate, endDate): # todo
-        """
-        Nach jeder Analyse wird diese Funktion durchgefört und die Ergebnisse als pd.Series gespeichert.
+    # def ExcelMaker(self, sexuality, bundesland, altersgruppe, startDate, endDate): # todo
+    """
+    >>>Auf Frund eines Fehler habe ich die Excel Methode auskommentiert, damit die Funktionsfähigkeit des gesamte Programs
+    nicht beeintrechtigt wird. Aber mit mehr Zeit hätte ich diesen <teil integrieren können.<<<
+    
+    Nach jeder Analyse wird diese Funktion durchgefört und die Ergebnisse als pd.Series gespeichert.
 
-        :param columnName: Name der Spalte
-        :param bundesland: Name des Bundeslands, Altersgruppen, Startdatum, Enddatum und Geschlecht
-        :return: pd.Series mit dem Wochenstart-Datum als Index und den kumulierten Werten.
-        """
-        df = self.data[self.data.Geschlecht == sexuality]  # matrisi az hame zan ha ya ...
-        df = df[df.Bundesland == bundesland]
-        df = df[df.Altersgruppe == altersgruppe]
-        newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
-        return newDf
+    :param columnName: Name der Spalte
+    :param bundesland: Name des Bundeslands, Altersgruppen, Startdatum, Enddatum und Geschlecht
+    :return: pd.Series mit dem Wochenstart-Datum als Index und den kumulierten Werten.
+    """
+        # df = self.data[self.data.Geschlecht == sexuality]  # matrisi az hame zan ha ya ...
+        # df = df[df.Bundesland == bundesland]
+        # df = df[df.Altersgruppe == altersgruppe]
+        # newDf = df.loc[(df["Meldedatum"] >= startDate) & (df["Meldedatum"] <= endDate)]
+        # return newDf
 

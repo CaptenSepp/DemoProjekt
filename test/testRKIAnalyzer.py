@@ -97,6 +97,36 @@ class testRKIData(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
+    def testWeeklySumOfAllData(self):
+        mut = RKIAnalyzer()
+        columnName = 'AnzahlFall'
+        bundesland = 'Baden-Württemberg'
+        altersgruppe = 'A35-A59'
+        startDate = '2020/11/02 00:00:00'
+        endDate = '2021/02/25 00:00:00'
+
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getWeeklySumOfAllData(columnName, bundesland, altersgruppe, startDate, endDate)
+        result = result.values.tolist()
+        expected = [3]  # die Summe bleibt gleich bis zum letze Woche
+
+        self.assertEqual(result, expected)
+
+    def testWeeklySumOfAllDataGenesen(self):
+        mut = RKIAnalyzer()
+        columnName = 'AnzahlFall'
+        bundesland = 'Bayern'
+        altersgruppe = 'A60-A79'
+        startDate = '2020/11/02 00:00:00'
+        endDate = '2021/02/25 00:00:00'
+
+        mut.loadDataFromFile(self.datastream, filetype='csv')
+        result = mut.getWeeklySumOfAllDataGenesen(columnName, bundesland, altersgruppe, startDate, endDate)
+        result = result.values.tolist()
+        expected = [1]  # die Summe bleibt gleich bis zum letze Woche
+
+        self.assertEqual(result, expected)
+
 
 class testFileTypes(unittest.TestCase):  # todo how can i use this??
     def testUnknown(self):
